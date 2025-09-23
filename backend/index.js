@@ -31,10 +31,21 @@ app.post('/api/signup', (req, res) => {
 
 // 로그인 API
 app.post("/api/login", (req, res) => {
-  console.log("요청 바디:", req.body); // 디버깅 로그
-  res.json({ message: "로그인 API 살아있음" });
-});
+  const { username, password } = req.body;
 
+  const sql = "SELECT * FROM users WHERE username = ? AND user_pw = ?";
+  db.query(sql, [username, password], (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: "DB 오류" });
+    }
+    if (results.length > 0) {
+      res.json({ message: "로그인 성공" });
+    } else {
+      res.json({ message: "로그인 실패: 아이디 또는 비밀번호가 틀렸습니다" });
+    }
+  });
+});
 
 
 
