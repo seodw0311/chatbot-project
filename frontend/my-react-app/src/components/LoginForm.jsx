@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from 'react-router-dom';
 
 function LoginForm() {
   const [username, setUsername] = useState("");
@@ -18,11 +19,14 @@ function LoginForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>로그인</h2>
+      <form onSubmit={handleSubmit}>
+        <h1>
+            <Link to="/">AIRCHAT</Link>
+        </h1>
+        <h2>로그인</h2>
       <input 
         type="text" 
-        placeholder="이메일" 
+        placeholder="아이디" 
         value={username} 
         onChange={(e) => setUsername(e.target.value)} />
       <input 
