@@ -2,14 +2,13 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 function SignUpForm() {
-  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault(); // 페이지 새로고침 방지
 
-    const data = { username, email, password };
+    const data = { email, password };
 
     // API 호출 (Node.js backend)
     fetch('/api/signup', {
@@ -30,15 +29,23 @@ function SignUpForm() {
         <Link to="/">AIRCHAT</Link>
       </h1>
       <h2>회원가입</h2>
-      <div>
-        <label>사용자 아이디:</label>
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-        />
+      <div id="g_id_onload"
+          data-client_id="139542295275-f44016fbfbvudafl0a89s2or0kab3h96.apps.googleusercontent.com"
+          data-context="signin"
+          data-ux_mode="popup"
+          data-callback="handleCredentialResponse"
+          data-auto_prompt="false">
       </div>
+
+      <div class="g_id_signin"
+          data-type="standard"
+          data-shape="pill"
+          data-theme="outline"
+          data-text="continue_with"
+          data-size="large"
+          data-locale="ko"
+          data-logo_alignment="left">
+      </div>      
       <div>
         <label>이메일:</label>
         <input
