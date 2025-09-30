@@ -1,24 +1,28 @@
-// 필요한 모듈 import
+require('dotenv').config();
+
+console.log("✅ NAVER_CLIENT_ID:", process.env.NAVER_CLIENT_ID);
+
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const db = require('./db'); // db.js 연결
+const db = require('./db'); 
+const naverAuthRouter = require("./naverAuth"); // ✅ 여기서 naverAuth.js 불러옴
 
-// 서버 생성
 const app = express();
 const PORT = 3000;
 
-// 미들웨어 설정
-app.use(cors()); // React에서 요청 가능하도록 허용
-app.use(bodyParser.json()); // JSON 데이터 파싱
+app.use(cors());
+app.use(bodyParser.json());
+
+// 네이버 로그인 라우터 등록
+app.use("/", naverAuthRouter);
+console.log("✅ Naver Auth Router loaded");
 
 // 회원가입 API
 app.post('/api/signup', (req, res) => {
-  const { username, email, password } = req.body;
-
-  // MySQL 쿼리
-  const sql = `INSERT INTO USERS (USERNAME, EMAIL, USER_PW) VALUES (?, ?, ?)`;
-  db.query(sql, [username, email, password], (err, result) => {
+  const { email, password } = req.body;
+  const sql = `INSERT INTO USERS (EMAIL, USER_PW) VALUES (?, ?)`;
+  db.query(sql, [email, password], (err, result) => {
     if (err) {
       console.error(err);
       res.status(500).json({ message: '회원가입 실패' });
@@ -28,13 +32,11 @@ app.post('/api/signup', (req, res) => {
   });
 });
 
-
 // 로그인 API
 app.post("/api/login", (req, res) => {
-  const { username, password } = req.body;
-
-  const sql = "SELECT * FROM users WHERE username = ? AND user_pw = ?";
-  db.query(sql, [username, password], (err, results) => {
+  const { email, password } = req.body;
+  const sql = "SELECT * FROM users WHERE email = ? AND user_pw = ?";
+  db.query(sql, [email, password], (err, results) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ message: "DB 오류" });
@@ -47,9 +49,6 @@ app.post("/api/login", (req, res) => {
   });
 });
 
-
-
-// 서버 실행
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
