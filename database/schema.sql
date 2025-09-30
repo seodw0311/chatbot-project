@@ -10,3 +10,13 @@ CREATE TABLE USERS (
     PREFERENCES JSON NULL
  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci; -- 대소문자 구분 및 외국어 사용, 사용자 정보 안정성성
 
+CREATE TABLE AUTH_PROVIDERS (
+    PROVIDER_ID INT PRIMARY KEY AUTO_INCREMENT,
+    USER_ID INT NOT NULL,
+    PROVIDER_TYPE ENUM('LOCAL','GOOGLE', 'NAVER', 'KAKAO') NOT NULL,
+    PROVIDER_KEY VARCHAR(255) NOT NULL,  -- 각 서비스에서 발급한 user id
+    USER_PW VARCHAR(255) NULL,           -- LOCAL일 경우만 비밀번호 해시 저장
+    FOREIGN KEY (USER_ID) REFERENCES USERS(USER_ID),
+    UNIQUE (PROVIDER_TYPE, PROVIDER_KEY) -- 같은 Provider 내에서는 유일
+);  ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci; -- 대소문자 구분 및 외국어 사용, 사용자 정보 안정성성
+
